@@ -15,6 +15,7 @@ gray_set=[0]*(n+1) #nodes currenty in visit
 parents=defaultdict(int)
 white_set=[1]*(n+1) # node not started visiting
 white_set[0]=0
+distance=[0]*(n+1)
 
 def check_set(arr):
   for i,el in enumerate(arr):
@@ -28,9 +29,17 @@ def dfs(node):
   white_set[node]=0
   for neighbour in range(n+1):
     value=T[node][neighbour]
+    if(value):
+      if(distance[neighbour]>0):
+        distance[neighbour]=min(distance[neighbour],distance[node]+1)
+      else:
+        # print(neighbour,node)
+        if(distance[neighbour]!=-1):
+          distance[neighbour]=distance[node]+1
     # print(neighbour,gray_set,node,black_set[neighbour])
     if(value and not gray_set[neighbour] and not black_set[neighbour] ): # its not currently in visit and not totally visited yet
       parents[neighbour]=node
+      
       dfs(neighbour)
     elif(value and gray_set[neighbour]):
       print("cycle detected")
@@ -39,7 +48,6 @@ def dfs(node):
       while(1):
         node1=parents[node1]
         if(node1<1):
-          # print(parents)
           break
         print(node1,"<--",end='')
       print('')
@@ -51,6 +59,9 @@ def dfs(node):
     unvisited_index=check_set(white_set)
     if(unvisited_index!=0):
       dfs(unvisited_index)
+      distance[unvisited_index]=0
 
 dfs(1)
+distance[1]=0
+print(distance)
   
